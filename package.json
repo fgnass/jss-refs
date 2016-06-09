@@ -1,0 +1,48 @@
+{
+  "name": "jss-local-refs",
+  "description": "JSS plugin to resolve local classNames in selectors",
+  "version": "1.0.0",
+  "author": {
+    "name": "Felix Gnass",
+    "email": "fgnass@gmail.com"
+  },
+  "repository": "fgnass/jss-local-refs",
+  "keywords": [
+    "jss",
+    "plugin"
+  ],
+  "engines": {},
+  "scripts": {
+    "all": "npm run lint && npm run build",
+    "test": "opener ./test/index.html",
+    "build": "npm run clean && npm run build:lib && npm run build:max && npm run build:min",
+    "clean": "rimraf ./lib/*",
+    "build:lib": "babel src --out-dir lib",
+    "build:max": "NODE_ENV=development webpack src/index.js dist/jss-local-refs.js",
+    "build:min": "NODE_ENV=production webpack src/index.js dist/jss-local-refs.min.js",
+    "lint": "eslint ./src",
+    "prepublish": "npm run all && git push --tags"
+  },
+  "license": "MIT",
+  "main": "./lib/index.js",
+  "devDependencies": {
+    "babel-cli": "^6.5.1",
+    "babel-core": "^6.5.1",
+    "babel-eslint": "^5.0.0-beta9",
+    "babel-loader": "^6.2.2",
+    "babel-preset-es2015": "^6.5.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "eslint": "^1.10.3",
+    "eslint-plugin-react": "^3.16.1",
+    "eslint-config-airbnb": "0.1.0",
+    "eslint-config-jss": "0.2.0",
+    "jss": ">=3.0.0 < 4.0.0",
+    "opener": "^1.4.1",
+    "qunitjs": "1.15.0",
+    "rimraf": "^2.4.3",
+    "webpack": "^1.11.0"
+  },
+  "peerDependencies": {
+    "jss": ">=3.0.0 < 4.0.0"
+  }
+}
