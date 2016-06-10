@@ -36,13 +36,13 @@
     "eslint-plugin-react": "^3.16.1",
     "eslint-config-airbnb": "0.1.0",
     "eslint-config-jss": "0.2.0",
-    "jss": ">=3.0.0 < 4.0.0",
+    "jss": "^3.12.0",
     "opener": "^1.4.1",
     "qunitjs": "1.15.0",
     "rimraf": "^2.4.3",
     "webpack": "^1.11.0"
   },
   "peerDependencies": {
-    "jss": ">=3.0.0 < 4.0.0"
+    "jss": "^3.12.0"
   }
 }
