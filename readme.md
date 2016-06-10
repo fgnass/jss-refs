@@ -28,7 +28,7 @@ const sheet = jss.createStyleSheet({
 })
 ```
 
-_All_ class selectors in a sheet – like the `.button` example above – get
+All class selectors in a sheet – like the `.button` example above – get
 expanded to the generated JSS class name. So `&:hover > .button` will become
 `'.container--jss-0-0:hover > .button--jss-0-1`.
 
