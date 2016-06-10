@@ -1,10 +1,10 @@
 'use strict'
 
 QUnit.module('Refs plugin', {
-  setup: function () {
+  setup: function () {
     jss.use(jssRefs.default())
   },
-  teardown: function () {
+  teardown: function () {
     jss.plugins.registry = []
   }
 })
@@ -96,9 +96,9 @@ test('nesting with space', function () {
   var sheet = jss.createStyleSheet({
     a: {
       float: 'left',
-      '& b': {float: 'left'}
+      '& b': { float: 'left' }
     }
-  }, {named: false})
+  }, { named: false })
   ok(sheet.rules.a)
   ok(sheet.rules['a b'])
   equal(sheet.toString(), 'a {\n  float: left;\n}\na b {\n  float: left;\n}')
@@ -108,11 +108,11 @@ test('nesting without space', function () {
   var sheet = jss.createStyleSheet({
     a: {
       float: 'left',
-      '&b': {float: 'left'}
+      '&b': { float: 'left' }
     }
-  }, {named: false})
+  }, { named: false })
   ok(sheet.rules.a)
-  ok(sheet.rules['ab'])
+  ok(sheet.rules.ab)
   equal(sheet.toString(), 'a {\n  float: left;\n}\nab {\n  float: left;\n}')
 })
 
@@ -120,10 +120,10 @@ test('multi nesting', function () {
   var sheet = jss.createStyleSheet({
     a: {
       float: 'left',
-      '&b': {float: 'left'},
-      '& c': {float: 'left'}
+      '&b': { float: 'left' },
+      '& c': { float: 'left' }
     }
-  }, {named: false})
+  }, { named: false })
   ok(sheet.rules.a)
   ok(sheet.rules.ab)
   ok(sheet.rules['a c'])
@@ -134,9 +134,9 @@ test('multi nesting in one selector', function () {
   var sheet = jss.createStyleSheet({
     a: {
       float: 'left',
-      '&b, &c': {float: 'left'}
+      '&b, &c': { float: 'left' }
     }
-  }, {named: false})
+  }, { named: false })
   ok(sheet.rules.a)
   ok(sheet.rules['ab, ac'])
   equal(sheet.toString(), 'a {\n  float: left;\n}\nab, ac {\n  float: left;\n}')
@@ -153,7 +153,7 @@ test('deep nesting', function () {
         }
       }
     }
-  }, {named: false})
+  }, { named: false })
   ok(sheet.rules.a)
   ok(sheet.rules.ab)
   ok(sheet.rules.abc)
@@ -165,7 +165,7 @@ test('addRules', function () {
     a: {
       height: '1px'
     }
-  }, {named: false})
+  }, { named: false })
 
   sheet.addRules({
     b: {
@@ -183,7 +183,7 @@ test('nesting in a namespaced rule', function () {
   var sheet = jss.createStyleSheet({
     a: {
       float: 'left',
-      '& b': {float: 'left'}
+      '& b': { float: 'left' }
     }
   })
   ok(sheet.rules['.a--jss-0-0'])
@@ -199,7 +199,7 @@ test('nesting in a conditional namespaced rule', function () {
     },
     '@media': {
       a: {
-        '&:hover': {color: 'red'}
+        '&:hover': { color: 'red' }
       }
     }
   })
