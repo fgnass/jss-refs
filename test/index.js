@@ -28,7 +28,7 @@ test('resolve local class names', function () {
   equal(sheet.toString(), '.a--jss-0-0 {\n  padding: 0;\n}\n.b--jss-0-1 {\n  color: black;\n}\n.a--jss-0-0:hover > .b--jss-0-1 {\n  color: red;\n}')
 })
 
-test('nested selectors', function () {
+test('resolve local class names in nested selectors', function () {
   jss.uid.reset()
   var sheet = jss.createStyleSheet({
     a: {
@@ -80,6 +80,16 @@ test('global selectors', function () {
   ok(sheet.rules['.a--jss-0-0'])
   deepEqual(Object.keys(sheet.classes), ['a'])
   equal(sheet.toString(), '.a--jss-0-0 {\n  padding: 0;\n}\n.a--jss-0-0:hover > .b:not(.c) {\n  color: red;\n}')
+})
+
+test('global selectors at the top level', function () {
+  jss.uid.reset()
+  var sheet = jss.createStyleSheet({
+    'global(.b:not(.c))': {
+      color: 'red',
+    },
+  })
+  equal(sheet.toString(), '.b:not(.c) {\n  color: red;\n}')
 })
 
 test('nesting with space', function () {
