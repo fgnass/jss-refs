@@ -1,64 +1,50 @@
 ![JSS logo](https://avatars1.githubusercontent.com/u/9503099?v=3&s=60)
 
-## JSS plugin to resolve local classNames in selectors
+## JSS plugin reference other rules within the same stylesheet
 
-Sometimes you want to craft rules that refer to more than one local class name,
-so using [jss-nested](https://github.com/jsstyles/jss-nested) is not an option.
+This plugin combines the functionality of
+[jss-nested](https://github.com/jsstyles/jss-nested) and
+[jss-local-refs](https://github.com/fgnass/jss-local-refs) and can be used
+as drop-in replacement for both of those.
 
-For example if you want to restyle an element when it's parent is hovered like
-in the following use case.
+## Usage
 
-## Usage example
-
-```javascript
+```js
 import jss from 'jss'
-import localRefs from 'jss-local-refs'
+import refs from 'jss-refs'
 
-jss.use(localRefs())
+jss.use(refs())
 
 const sheet = jss.createStyleSheet({
   container: {
-    padding: '20px'
+    padding: '20px',
+    '&:hover > .button': {
+      background: 'blue'    
+    }
   },
   button: {
-    background: 'red'
-  },
-  '.container:hover > .button': {
-    background: 'blue'    
+    background: 'gray'
   }
 })
 ```
 
-```javascript
-console.log(sheet.toString())
-```
-```css
-.container--jss-0-0 {
-  padding: 20px;
-}
-.button-jss-0-1 {
-  background: red;
-}
-.container--jss-0-0:hover > .button-jss-0-1 {
-  background: blue;
-}
-```
+_All_ class selectors in a sheet – like the `.button` example above – get
+expanded to the generated JSS class name. So `&:hover > .button` will become
+`'.container--jss-0-0:hover > .button--jss-0-1`.
 
-```javascript
-console.log(sheet.classes)
-```
-```javascript
-{
-  container: "container--jss-0-0",
-  button: "button-jss-0-1"
-}
-```
+Referencing a non-existent name will raise an error. In order to refer to
+global classes that have been defined inside another sheet you can use the
+`global()` function:
 
-## Run tests
-
-```bash
-npm install
-npm test
+```js
+const sheet = jss.createStyleSheet({
+  container: {
+    padding: '20px',
+    '&:hover global(.btn-primary)': {
+      background: 'blue'    
+    }
+  }
+})
 ```
 
 ## License
