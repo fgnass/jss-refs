@@ -19,7 +19,14 @@ function rewriteLocalClasses(selector, fn) {
   return processLocalParts(selector, sel => rewriteClasses(sel, fn))
 }
 
-export default function jssLocalRefs() {
+/**
+ * Convert nested rules to separate ones and resolve references to other
+ * local/global classes.
+ *
+ * @param {Rule} rule
+ * @api public
+ */
+export default function jssRefs() {
   return rule => {
     if (rule.type !== 'regular') return
     const {sheet, jss, parent} = rule.options

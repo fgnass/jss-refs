@@ -1,6 +1,8 @@
-QUnit.module('Local refs plugin', {
-  setup: function () {
-    jss.use(jssLocalRefs.default())
+'use strict'
+
+QUnit.module('Refs plugin', {
+  setup: function () {
+    jss.use(jssRefs.default())
   },
   teardown: function () {
     jss.plugins.registry = []

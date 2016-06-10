@@ -1,12 +1,12 @@
 {
-  "name": "jss-local-refs",
-  "description": "JSS plugin to resolve local classNames in selectors",
+  "name": "jss-refs",
+  "description": "JSS plugin reference other rules within the same stylesheet",
   "version": "1.0.0",
   "author": {
     "name": "Felix Gnass",
     "email": "fgnass@gmail.com"
   },
-  "repository": "fgnass/jss-local-refs",
+  "repository": "fgnass/jss-refs",
   "keywords": [
     "jss",
     "plugin"
@@ -18,8 +18,8 @@
     "build": "npm run clean && npm run build:lib && npm run build:max && npm run build:min",
     "clean": "rimraf ./lib/*",
     "build:lib": "babel src --out-dir lib",
-    "build:max": "NODE_ENV=development webpack src/index.js dist/jss-local-refs.js",
-    "build:min": "NODE_ENV=production webpack src/index.js dist/jss-local-refs.min.js",
+    "build:max": "NODE_ENV=development webpack src/index.js dist/jss-refs.js",
+    "build:min": "NODE_ENV=production webpack src/index.js dist/jss-refs.min.js",
     "lint": "eslint ./src",
     "prepublish": "npm run all && git push --tags"
   },
