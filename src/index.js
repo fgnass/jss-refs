@@ -47,7 +47,7 @@ function rewriteLocalClasses(selector, fn) {
 export default function jssRefs() {
   return rule => {
     if (rule.type !== 'regular') return
-    const {sheet, jss, parent} = rule.options
+    const { sheet, jss, parent } = rule.options
 
     // Find the container where to add new rules:
     let container = sheet || jss
@@ -56,7 +56,7 @@ export default function jssRefs() {
     }
 
     // Look for ampersands in property names which indicates a nested rule:
-    for (const prop in rule.style) {
+    Object.keys(rule.style).forEach(prop => {
       const parentSelector = rule.name ? `.${rule.name}` : rule.selector
       const selector = prop.replace(ampRegExp, parentSelector)
       if (selector !== prop) {
@@ -65,7 +65,7 @@ export default function jssRefs() {
         container.createRule(selector, rule.style[prop], rule.options)
         delete rule.style[prop]
       }
-    }
+    })
 
     // Next we rewrite local class name references in named rules.
     // If this is no named rule, we are already done:
@@ -76,7 +76,8 @@ export default function jssRefs() {
       const refRule = sheet.getRule(className)
       if (!refRule) {
         // Referencing non-existent rules raises an error:
-        throw new Error(`No local rule found with the name ${className} Make sure to define it or use global(.${className}) instead.`)
+        throw new Error(`No local rule found with the name ${className}.`
+          + `Make sure to define it or use global(.${className}) instead.`)
       }
       return refRule.selector
     })
