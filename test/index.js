@@ -207,3 +207,17 @@ test('nesting in a conditional namespaced rule', function () {
   ok(sheet.rules['@media'])
   equal(sheet.toString(), '.a--jss-0-0 {\n  color: green;\n}\n@media {\n  .a--jss-0-0:hover {\n    color: red;\n  }\n}')
 })
+test('double nested rule resolved correctly', function () {
+  jss.uid.reset()
+  var sheet = jss.createStyleSheet({
+    a: {
+      '& > li': {
+        '&global(.active)': {
+          color: 'green'
+        }
+      }
+    }
+  })
+  ok(sheet.rules['.a--jss-0-0'])
+  equal(sheet.toString(), '.a--jss-0-0 > li.active {\n  color: green;\n}')
+})
