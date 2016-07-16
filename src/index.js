@@ -1,5 +1,6 @@
 const ampRegExp = /&/g
 const classRegExp = /\.(\w+)/g
+const extraPointsRegExp = /^\.+(.*?)$/
 
 // The RegExp to process local class selectors is slightly more complex.
 // To make it easier to read we build it incrementally:
@@ -58,7 +59,7 @@ export default function jssRefs() {
     // Look for ampersands in property names which indicates a nested rule:
     Object.keys(rule.style).forEach(prop => {
       const parentSelector = rule.name ? `.${rule.name}` : rule.selector
-      const selector = prop.replace(ampRegExp, parentSelector)
+      const selector = prop.replace(ampRegExp, parentSelector).replace(extraPointsRegExp, `.$1`)
       if (selector !== prop) {
         // If the strings differ there was a match.
         // Remove the style declaration and create a new rule:
