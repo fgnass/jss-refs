@@ -1,6 +1,6 @@
 const ampRegExp = /&/g
 const classRegExp = /\.(\w+)/g
-const extraPointsRegExp = /^\.+(.*?)$/
+const extraPointsRegExp = /\.+(\w+)/g
 
 // The RegExp to process local class selectors is slightly more complex.
 // To make it easier to read we build it incrementally:
