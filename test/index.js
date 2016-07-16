@@ -216,8 +216,16 @@ test('double nested rule resolved correctly', function () {
           color: 'green'
         }
       }
+    },
+    b: {
+      '& > li': {
+        '& > div, & > span,&>div,    &> span': {
+          color: 'red'
+        }
+      }
     }
   })
   ok(sheet.rules['.a--jss-0-0'])
-  equal(sheet.toString(), '.a--jss-0-0 > li.active {\n  color: green;\n}')
+  ok(sheet.rules['.b--jss-0-3'])
+  equal(sheet.toString(), '.a--jss-0-0 > li.active {\n  color: green;\n}\n.b--jss-0-3 > li > div, .b--jss-0-3 > li > span,.b--jss-0-3 > li>div,    .b--jss-0-3 > li> span {\n  color: red;\n}')
 })
