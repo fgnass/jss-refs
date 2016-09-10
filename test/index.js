@@ -1,16 +1,11 @@
 'use strict'
 
-QUnit.module('Refs plugin', {
-  setup: function () {
-    jss.use(jssRefs.default())
-  },
-  teardown: function () {
-    jss.plugins.registry = []
-  }
-})
+function resetJss() {
+  return jss.create().use(jssRefs.default());
+}
 
-test('resolve local class names', function () {
-  jss.uid.reset()
+QUnit.test('resolve local class names', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       padding: 0,
@@ -22,14 +17,14 @@ test('resolve local class names', function () {
       color: 'red',
     }
   })
-  ok(sheet.rules['.a--jss-0-0'])
-  ok(sheet.rules['.b--jss-0-1'])
-  deepEqual(Object.keys(sheet.classes), ['a', 'b'])
-  equal(sheet.toString(), '.a--jss-0-0 {\n  padding: 0;\n}\n.b--jss-0-1 {\n  color: black;\n}\n.a--jss-0-0:hover > .b--jss-0-1 {\n  color: red;\n}')
+  assert.ok(sheet.getRule('a'))
+  assert.ok(sheet.getRule('b'))
+  assert.deepEqual(Object.keys(sheet.classes), ['a', 'b'])
+  assert.equal(sheet.toString(), `.${sheet.classes.a} {\n  padding: 0;\n}\n.${sheet.classes.b} {\n  color: black;\n}\n.${sheet.classes.a}:hover > .${sheet.classes.b} {\n  color: red;\n}`)
 })
 
-test('resolve local class names in nested selectors', function () {
-  jss.uid.reset()
+QUnit.test('resolve local class names in nested selectors', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       padding: 0,
@@ -41,15 +36,15 @@ test('resolve local class names in nested selectors', function () {
       }
     },
   })
-  ok(sheet.rules['.a--jss-0-0'])
-  ok(sheet.rules['.b--jss-0-1'])
-  deepEqual(Object.keys(sheet.classes), ['a', 'b'])
-  equal(sheet.toString(), '.a--jss-0-0 {\n  padding: 0;\n}\n.b--jss-0-1 {\n  color: black;\n}\n.a--jss-0-0:hover > .b--jss-0-1 {\n  color: red;\n}')
+  assert.ok(sheet.getRule('a'))
+  assert.ok(sheet.getRule('b'))
+  assert.deepEqual(Object.keys(sheet.classes), ['a', 'b'])
+  assert.equal(sheet.toString(), `.${sheet.classes.a} {\n  padding: 0;\n}\n.${sheet.classes.b} {\n  color: black;\n}\n.${sheet.classes.a}:hover > .${sheet.classes.b} {\n  color: red;\n}`)
 })
 
 
-test('refs to classes defined afterwards', function () {
-  jss.uid.reset()
+QUnit.test('refs to classes defined afterwards', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       padding: 0,
@@ -61,14 +56,14 @@ test('refs to classes defined afterwards', function () {
       color: 'black',
     },
   })
-  ok(sheet.rules['.a--jss-0-0'])
-  ok(sheet.rules['.b--jss-0-1'])
-  deepEqual(Object.keys(sheet.classes), ['a', 'b'])
-  equal(sheet.toString(), '.a--jss-0-0 {\n  padding: 0;\n}\n.b--jss-0-1 {\n  color: black;\n}\n.a--jss-0-0:hover > .b--jss-0-1 {\n  color: red;\n}')
+  assert.ok(sheet.getRule('a'))
+  assert.ok(sheet.getRule('b'))
+  assert.deepEqual(Object.keys(sheet.classes), ['a', 'b'])
+  assert.equal(sheet.toString(), `.${sheet.classes.a} {\n  padding: 0;\n}\n.${sheet.classes.b} {\n  color: black;\n}\n.${sheet.classes.a}:hover > .${sheet.classes.b} {\n  color: red;\n}`)
 })
 
-test('global selectors', function () {
-  jss.uid.reset()
+QUnit.test('global selectors', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       padding: 0,
@@ -77,46 +72,49 @@ test('global selectors', function () {
       }
     },
   })
-  ok(sheet.rules['.a--jss-0-0'])
-  deepEqual(Object.keys(sheet.classes), ['a'])
-  equal(sheet.toString(), '.a--jss-0-0 {\n  padding: 0;\n}\n.a--jss-0-0:hover > .b:not(.c) {\n  color: red;\n}')
+  assert.ok(sheet.getRule('a'))
+  assert.deepEqual(Object.keys(sheet.classes), ['a'])
+  assert.equal(sheet.toString(), `.${sheet.classes.a} {\n  padding: 0;\n}\n.${sheet.classes.a}:hover > .b:not(.c) {\n  color: red;\n}`)
 })
 
-test('global selectors at the top level', function () {
-  jss.uid.reset()
+QUnit.test('global selectors at the top level', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     'global(.b:not(.c))': {
       color: 'red',
     },
   })
-  equal(sheet.toString(), '.b:not(.c) {\n  color: red;\n}')
+  assert.equal(sheet.toString(), `.b:not(.c) {\n  color: red;\n}`)
 })
 
-test('nesting with space', function () {
+QUnit.test('nesting with space', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       float: 'left',
       '& b': { float: 'left' }
     }
   }, { named: false })
-  ok(sheet.rules.a)
-  ok(sheet.rules['a b'])
-  equal(sheet.toString(), 'a {\n  float: left;\n}\na b {\n  float: left;\n}')
+  assert.ok(sheet.getRule('a'))
+  assert.ok(Object.keys(sheet.classes), ['a b'])
+  assert.equal(sheet.toString(), `a {\n  float: left;\n}\na b {\n  float: left;\n}`)
 })
 
-test('nesting without space', function () {
+QUnit.test('nesting without space', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       float: 'left',
       '&b': { float: 'left' }
     }
   }, { named: false })
-  ok(sheet.rules.a)
-  ok(sheet.rules.ab)
-  equal(sheet.toString(), 'a {\n  float: left;\n}\nab {\n  float: left;\n}')
+  assert.ok(sheet.getRule('a'))
+  assert.ok(sheet.getRule('ab'))
+  assert.equal(sheet.toString(), `a {\n  float: left;\n}\nab {\n  float: left;\n}`)
 })
 
-test('multi nesting', function () {
+QUnit.test('multi nesting', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       float: 'left',
@@ -124,25 +122,27 @@ test('multi nesting', function () {
       '& c': { float: 'left' }
     }
   }, { named: false })
-  ok(sheet.rules.a)
-  ok(sheet.rules.ab)
-  ok(sheet.rules['a c'])
-  equal(sheet.toString(), 'a {\n  float: left;\n}\nab {\n  float: left;\n}\na c {\n  float: left;\n}')
+  assert.ok(sheet.getRule('a'))
+  assert.ok(sheet.getRule('ab'))
+  assert.ok(sheet.getRule('a c'))
+  assert.equal(sheet.toString(), `a {\n  float: left;\n}\nab {\n  float: left;\n}\na c {\n  float: left;\n}`)
 })
 
-test('multi nesting in one selector', function () {
+QUnit.test('multi nesting in one selector', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       float: 'left',
       '&b, &c': { float: 'left' }
     }
   }, { named: false })
-  ok(sheet.rules.a)
-  ok(sheet.rules['ab, ac'])
-  equal(sheet.toString(), 'a {\n  float: left;\n}\nab, ac {\n  float: left;\n}')
+  assert.ok(sheet.getRule('a'))
+  assert.ok(sheet.getRule('ab, ac'))
+  assert.equal(sheet.toString(), `a {\n  float: left;\n}\nab, ac {\n  float: left;\n}`)
 })
 
-test('deep nesting', function () {
+QUnit.test('deep nesting', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       float: 'left',
@@ -154,13 +154,14 @@ test('deep nesting', function () {
       }
     }
   }, { named: false })
-  ok(sheet.rules.a)
-  ok(sheet.rules.ab)
-  ok(sheet.rules.abc)
-  equal(sheet.toString(), 'a {\n  float: left;\n}\nab {\n  float: left;\n}\nabc {\n  float: left;\n}')
+  assert.ok(sheet.getRule('a'))
+  assert.ok(sheet.getRule('ab'))
+  assert.ok(sheet.getRule('abc'))
+  assert.equal(sheet.toString(), `a {\n  float: left;\n}\nab {\n  float: left;\n}\nabc {\n  float: left;\n}`)
 })
 
-test('addRules', function () {
+QUnit.test('addRules', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       height: '1px'
@@ -175,24 +176,24 @@ test('addRules', function () {
       }
     }
   })
-  equal(sheet.toString(), 'a {\n  height: 1px;\n}\nb {\n  height: 2px;\n}\nb c {\n  height: 3px;\n}')
+  assert.equal(sheet.toString(), `a {\n  height: 1px;\n}\nb {\n  height: 2px;\n}\nb c {\n  height: 3px;\n}`)
 })
 
-test('nesting in a namespaced rule', function () {
-  jss.uid.reset()
+QUnit.test('nesting in a namespaced rule', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       float: 'left',
       '& b': { float: 'left' }
     }
   })
-  ok(sheet.rules['.a--jss-0-0'])
-  ok(sheet.rules['.a--jss-0-0 b'])
-  equal(sheet.toString(), '.a--jss-0-0 {\n  float: left;\n}\n.a--jss-0-0 b {\n  float: left;\n}')
+  assert.ok(sheet.getRule('a'))
+  assert.ok(sheet.getRule('.a b'))
+  assert.equal(sheet.toString(), `.${sheet.classes.a} {\n  float: left;\n}\n.${sheet.classes.a} b {\n  float: left;\n}`)
 })
 
-test('nesting in a conditional namespaced rule', function () {
-  jss.uid.reset()
+QUnit.test('nesting in a conditional namespaced rule', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       color: 'green'
@@ -203,12 +204,12 @@ test('nesting in a conditional namespaced rule', function () {
       }
     }
   })
-  ok(sheet.rules['.a--jss-0-0'])
-  ok(sheet.rules['@media'])
-  equal(sheet.toString(), '.a--jss-0-0 {\n  color: green;\n}\n@media {\n  .a--jss-0-0:hover {\n    color: red;\n  }\n}')
+  assert.ok(sheet.getRule('a'))
+  assert.ok(sheet.getRule('@media'))
+  assert.equal(sheet.toString(), `.${sheet.classes.a} {\n  color: green;\n}\n@media {\n  .${sheet.classes.a}:hover {\n    color: red;\n  }\n}`)
 })
-test('double nested rule resolved correctly', function () {
-  jss.uid.reset()
+QUnit.test('double nested rule resolved correctly', function (assert) {
+  var jss = resetJss()
   var sheet = jss.createStyleSheet({
     a: {
       '& > li': {
@@ -225,7 +226,7 @@ test('double nested rule resolved correctly', function () {
       }
     }
   })
-  ok(sheet.rules['.a--jss-0-0'])
-  ok(sheet.rules['.b--jss-0-3'])
-  equal(sheet.toString(), '.a--jss-0-0 > li.active {\n  color: green;\n}\n.b--jss-0-3 > li > div, .b--jss-0-3 > li > span,.b--jss-0-3 > li>div,    .b--jss-0-3 > li> span {\n  color: red;\n}')
+  assert.ok(sheet.getRule('a'))
+  assert.ok(sheet.getRule('b'))
+  assert.equal(sheet.toString(), `.${sheet.classes.a} > li.active {\n  color: green;\n}\n.${sheet.classes.b} > li > div, .${sheet.classes.b} > li > span,.${sheet.classes.b} > li>div,    .${sheet.classes.b} > li> span {\n  color: red;\n}`)
 })

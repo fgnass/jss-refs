@@ -59,11 +59,11 @@ export default function jssRefs() {
     // Look for ampersands in property names which indicates a nested rule:
     Object.keys(rule.style).forEach(prop => {
       const parentSelector = rule.name ? `.${rule.name}` : rule.selector
-      const selector = prop.replace(ampRegExp, parentSelector).replace(extraPointsRegExp, `.$1`)
+      const selector = prop.replace(ampRegExp, parentSelector).replace(extraPointsRegExp, '.$1')
       if (selector !== prop) {
         // If the strings differ there was a match.
         // Remove the style declaration and create a new rule:
-        container.createRule(selector, rule.style[prop], rule.options)
+        container.addRule(selector, rule.style[prop], rule.options)
         delete rule.style[prop]
       }
     })
