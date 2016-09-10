@@ -63,7 +63,7 @@ export default function jssRefs() {
       if (selector !== prop) {
         // If the strings differ there was a match.
         // Remove the style declaration and create a new rule:
-        container.createRule(selector, rule.style[prop], rule.options)
+        container.addRule(selector, rule.style[prop], rule.options)
         delete rule.style[prop]
       }
     })
